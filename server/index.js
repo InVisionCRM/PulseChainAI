@@ -16,7 +16,7 @@ app.use(helmet());
 app.use(cors({
   origin: process.env.NODE_ENV === 'production' 
     ? ['https://yourdomain.com'] // Update with your actual domain
-    : ['http://localhost:5173', 'http://localhost:3000'],
+    : ['http://localhost:5173', 'http://localhost:5174', 'http://localhost:3000'],
   credentials: true
 }));
 

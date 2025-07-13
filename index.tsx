@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { marked } from 'marked';
+// import { marked } from 'marked';
 
 // --- APP STATE AND DOM ELEMENTS ---
 const app = document.getElementById('app')!;
@@ -18,7 +18,7 @@ let isFirstMessage = true;
 let deferredInstallPrompt: any = null;
 
 // API Configuration
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+const API_BASE_URL = 'http://localhost:3001';
 
 // Listen for PWA installation prompt
 window.addEventListener('beforeinstallprompt', (e) => {
@@ -76,7 +76,7 @@ async function renderMessage(sender: 'user' | 'ai', text: string): Promise<HTMLE
   textEl.classList.add('text');
   
   if (sender === 'ai') {
-    textEl.innerHTML = await marked.parse(text);
+    textEl.innerHTML = text;
   } else {
     textEl.textContent = text;
   }
@@ -138,16 +138,16 @@ async function handleSendMessage(e: Event) {
       const chunk = decoder.decode(value, { stream: true });
       streamedText += chunk;
       
-      aiMessageEl.innerHTML = await marked.parse(streamedText + ' <span class="loading-indicator">●</span>');
+      aiMessageEl.innerHTML = streamedText + ' <span class="loading-indicator">●</span>';
       chatLog.scrollTop = chatLog.scrollHeight;
     }
     
-    aiMessageEl.innerHTML = await marked.parse(streamedText);
+    aiMessageEl.innerHTML = streamedText;
     isFirstMessage = false;
 
   } catch (error) {
     console.error("Error sending message:", error);
-    aiMessageEl.innerHTML = await marked.parse('Sorry, something went wrong while getting a response. Please try again.');
+    aiMessageEl.innerHTML = 'Sorry, something went wrong while getting a response. Please try again.';
   } finally {
     setLoading(false);
     chatLog.scrollTop = chatLog.scrollHeight;
