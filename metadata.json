@@ -1,0 +1,6 @@
+{
+  "name": "HEX & PulseChain AI",
+  "description": "An installable PWA AI assistant for HEX and PulseChain, with offline capabilities, knowledgeable from the official whitepaper.",
+  "requestFramePermissions": [],
+  "prompt": ""
+}

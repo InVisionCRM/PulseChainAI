@@ -1,0 +1,23 @@
+{
+  "name": "PulseChainAI.COM",
+  "short_name": "PulseChainAI",
+  "description": "An installable AI assistant for HEX and PulseChain, with offline capabilities.",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#121212",
+  "theme_color": "#1e1e1e",
+  "icons": [
+    {
+      "src": "https://i.imgur.com/3gXhe18.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "https://i.imgur.com/3gXhe18.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
