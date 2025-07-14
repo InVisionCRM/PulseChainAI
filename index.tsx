@@ -135,6 +135,31 @@ function renderSplashScreen() {
 // --- CORE FUNCTIONS ---
 
 /**
+ * Processes markdown text and converts it to HTML.
+ * @param {string} text The markdown text to process.
+ * @returns {string} The processed HTML.
+ */
+function processMarkdown(text: string): string {
+  return text
+    // Convert line breaks to <br> tags
+    .replace(/\n/g, '<br>')
+    // Convert **bold** to <strong> tags
+    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+    // Convert *italic* to <em> tags
+    .replace(/\*(.*?)\*/g, '<em>$1</em>')
+    // Convert bullet points to proper HTML lists
+    .replace(/^•\s*(.*)$/gm, '<li>$1</li>')
+    // Wrap consecutive <li> elements in <ul> tags
+    .replace(/(<li>.*<\/li>)/gs, '<ul>$1</ul>')
+    // Clean up multiple <ul> tags
+    .replace(/<\/ul>\s*<ul>/g, '')
+    // Add spacing around sections
+    .replace(/<br><strong>/g, '<br><br><strong>')
+    // Ensure proper spacing after sections
+    .replace(/<\/strong><br>/g, '</strong><br><br>');
+}
+
+/**
  * Renders a message in the chat log.
  * @param {'user' | 'ai'} sender The sender of the message.
  * @param {string} text The message text.
@@ -157,7 +182,7 @@ async function renderMessage(sender: 'user' | 'ai', text: string): Promise<HTMLE
   textEl.classList.add('text');
   
   if (sender === 'ai') {
-    textEl.innerHTML = text;
+    textEl.innerHTML = processMarkdown(text);
   } else {
     textEl.textContent = text;
   }
@@ -205,7 +230,7 @@ async function handleSendMessage(e: Event) {
 
     // Vercel serverless function returns JSON, not a stream
     const data = await response.json();
-    aiMessageEl.innerHTML = data.text;
+    aiMessageEl.innerHTML = processMarkdown(data.text);
     isFirstMessage = false;
 
   } catch (error) {
@@ -363,6 +388,26 @@ function buildUI() {
       }
       #send-button:hover, #send-button:focus {
         background: linear-gradient(90deg, #7c3aed, #ff5ecd);
+      }
+      
+      /* Markdown formatting styles */
+      .message.ai .text strong {
+        font-weight: 700;
+        color: #fff;
+      }
+      
+      .message.ai .text ul {
+        margin: 0.5rem 0;
+        padding-left: 1.5rem;
+      }
+      
+      .message.ai .text li {
+        margin: 0.25rem 0;
+        line-height: 1.4;
+      }
+      
+      .message.ai .text br {
+        line-height: 1.6;
       }
       @media (max-width: 600px) {
         .animated-gradient-title { font-size: 1.7rem; }
