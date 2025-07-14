@@ -19,10 +19,10 @@ export default async function handler(req, res) {
   try {
     const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
     const chat = ai.chats.create({
-      model: 'gemini-2.0-flash-exp',
+      model: 'gemini-2.5-flash',
       config: { 
         systemInstruction: SYSTEM_INSTRUCTION,
-        tools: [{ webSearch: {} }]
+        tools: [{ googleSearch: {} }]
       },
     });
     const contentParts = [];

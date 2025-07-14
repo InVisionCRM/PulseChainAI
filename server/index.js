@@ -166,10 +166,10 @@ app.post('/api/chat', async (req, res) => {
 
     // Create chat session
     const chat = ai.chats.create({
-      model: 'gemini-2.0-flash-exp',
+      model: 'gemini-2.5-flash',
       config: {
         systemInstruction: SYSTEM_INSTRUCTION,
-        tools: [{ webSearch: {} }]
+        tools: [{ googleSearch: {} }]
       },
     });
 
