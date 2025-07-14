@@ -231,7 +231,7 @@ function buildUI() {
   document.body.style.overflowX = 'hidden';
 
   app.innerHTML = `
-    <header class="glass-header">
+    <header class="header-blur-bg" style="background: none; display: flex; flex-direction: column; align-items: center; position: relative; overflow: hidden;">
       <h1 class="animated-gradient-title">PulseChainAI.com</h1>
       <div class="header-subtitle">by <a href="https://superstake.win" target="_blank" rel="noopener" class="superstake-link">SuperStake.Win</a></div>
     </header>
@@ -245,26 +245,30 @@ function buildUI() {
       </div>
     </form>
     <style>
-      .glass-header {
-        background: rgba(255,255,255,0.18);
-        backdrop-filter: blur(8px);
-        -webkit-backdrop-filter: blur(8px);
-        border-radius: 0 0 1.2rem 1.2rem;
-        box-shadow: 0 2px 16px 0 rgba(0,0,0,0.08);
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        padding: 1.1rem 0 0.7rem 0;
-        margin-bottom: 0.5rem;
-        width: 100%;
-        position: sticky;
-        top: 0;
-        z-index: 10;
+      .header-blur-bg {
+        position: relative;
+        z-index: 1;
+        border-radius: 2.5rem;
+        overflow: hidden;
+        border-bottom: 2.5px solid #fff;
+      }
+      .header-blur-bg::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+        background: url('https://imgur.com/4w6ZOzN.jpg') center center / cover no-repeat;
+        filter: blur(2px);
+        opacity: 1;
+      }
+      .header-blur-bg > * {
+        position: relative;
+        z-index: 1;
       }
       .animated-gradient-title {
         font-size: 2.7rem;
         font-weight: 700;
-        background: linear-gradient(270deg, #ff5ecd, #7c3aed, #ff5ecd);
+        background: linear-gradient(270deg, #ff7cfb, #a855f7, #38bdf8, #ff7cfb);
         background-size: 200% auto;
         background-clip: text;
         -webkit-background-clip: text;
@@ -273,6 +277,7 @@ function buildUI() {
         animation: gradientMove 4s linear infinite;
         margin-bottom: 0.2rem;
         line-height: 1.1;
+        filter: brightness(1.35) drop-shadow(0 2px 8px #fff8);
       }
       @keyframes gradientMove {
         0% { background-position: 0% center; }
@@ -289,7 +294,7 @@ function buildUI() {
       .superstake-link {
         font-weight: 700;
         color: #fff !important;
-        text-decoration: none !important;
+        text-decoration: underline !important;
       }
       .form-controls, .chat-controls-responsive, .input-wrapper, form {
         background: transparent !important;
