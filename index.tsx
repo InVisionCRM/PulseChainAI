@@ -289,7 +289,7 @@ function buildUI() {
         margin-left: auto;
         margin-right: auto;
         gap: 8px;
-        padding-bottom: 56px;
+        padding-bottom: 96px;
       }
       .chat-controls-responsive .input-wrapper {
         flex: 1 1 0%;
@@ -328,7 +328,7 @@ function buildUI() {
           max-width: 98vw;
           margin-top: 16px;
           gap: 4px;
-          padding-bottom: 72px;
+          padding-bottom: 120px;
         }
         #chat-input {
           font-size: 16px;
