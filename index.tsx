@@ -72,11 +72,11 @@ function renderSplashScreen() {
           This is an AI-powered tool for learning the basics of HEX. Information may not be 100% accurate. For official documentation, visit <a href="https://hex.com" target="_blank" rel="noopener">HEX.com</a> and <a href="https://pulsechain.com" target="_blank" rel="noopener">PulseChain.com</a>.
         </p>
         <p class="splash-warning-minimal">
-          If you notice any inaccuracies, DM <a href="https://twitter.com/KCCRYPTO369" target="_blank" rel="noopener">@KCCRYPTO369</a> on Twitter.<br>
+          If you notice any inaccuracies, DM <a href="https://twitter.com/KCCRYPTO369" target="_blank" rel="noopener">@KCCRYPTO369</a> on X.<br>
           This app was made by <a href="https://superstake.win" target="_blank" rel="noopener">SuperStake.Win</a> out of love for HEX and PulseChain.
         </p>
         <div class="splash-scam-minimal">
-          <b>Notice:</b> If anyone claims to be part of this project and asks for donations, it is a scam. There are no official Twitter or Telegram accounts for PulseChainAI.com.
+          <b>Notice:</b> If anyone claims to be part of this project and asks for donations, it is a scam. There are no official X or Telegram accounts for PulseChainAI.com.
         </div>
         <button id="splash-continue-btn" class="splash-btn-minimal">Continue</button>
       </div>
@@ -86,8 +86,18 @@ function renderSplashScreen() {
         position: fixed; z-index: 9999; inset: 0; background: rgba(24,24,27,0.85); display: flex; align-items: center; justify-content: center;
       }
       .splash-content-minimal {
-        background: #23232a; border-radius: 1rem; box-shadow: 0 4px 24px 0 rgba(0,0,0,0.18);
-        padding: 2.2rem 2rem; max-width: 400px; width: 100%; color: #e5e7eb; text-align: center; font-family: 'Inter', 'Poppins', sans-serif;
+        background: rgba(35, 35, 42, 0.2);
+        border-radius: 1rem;
+        box-shadow: 0 4px 24px 0 rgba(0,0,0,0.18);
+        padding: 2.2rem 2rem;
+        max-width: 400px;
+        width: 100%;
+        color: #e5e7eb;
+        text-align: center;
+        font-family: 'Inter', 'Poppins', sans-serif;
+        border: 2px solid #fff;
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
       }
       .splash-title-minimal {
         font-size: 2rem; font-weight: 700; margin-bottom: 1.1rem; color: #a855f7;
@@ -248,7 +258,7 @@ function buildUI() {
       .header-blur-bg {
         position: relative;
         z-index: 1;
-        border-radius: 2.5rem;
+        border-radius: 0 0 2.5rem 2.5rem;
         overflow: hidden;
         border-bottom: 2.5px solid #fff;
       }
@@ -258,7 +268,7 @@ function buildUI() {
         inset: 0;
         z-index: 0;
         background: url('https://imgur.com/4w6ZOzN.jpg') center center / cover no-repeat;
-        filter: blur(2px);
+        filter: blur(4px);
         opacity: 1;
       }
       .header-blur-bg > * {
@@ -274,10 +284,10 @@ function buildUI() {
         -webkit-background-clip: text;
         color: transparent;
         -webkit-text-fill-color: transparent;
-        animation: gradientMove 4s linear infinite;
+        animation: gradientMove 12s linear infinite;
         margin-bottom: 0.2rem;
         line-height: 1.1;
-        filter: brightness(1.35) drop-shadow(0 2px 8px #fff8);
+        filter: brightness(1.25) drop-shadow(0 1px 3px #fff6);
       }
       @keyframes gradientMove {
         0% { background-position: 0% center; }
