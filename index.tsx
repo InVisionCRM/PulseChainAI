@@ -12,24 +12,33 @@ let chatLog: HTMLElement;
 let chatForm: HTMLFormElement;
 let chatInput: HTMLTextAreaElement;
 let sendButton: HTMLButtonElement;
+let splashScreen: HTMLElement | null = null;
 
 let isLoading = false;
 let isFirstMessage = true;
 let deferredInstallPrompt: any = null;
+let showSplash = true;
+let canInstall = false;
 
 // API Configuration
 const API_BASE_URL = '/api';
 
 // Listen for PWA installation prompt
 window.addEventListener('beforeinstallprompt', (e) => {
-  // Prevent the mini-infobar from appearing on mobile
   e.preventDefault();
-  // Stash the event so it can be triggered later.
   deferredInstallPrompt = e;
-  // Update UI to notify the user they can install the PWA
+  canInstall = true;
   const installButton = document.getElementById('install-app-button');
   if (installButton) {
     installButton.style.display = 'flex';
+    installButton.disabled = false;
+  }
+  // Also show install button on splash
+  const splashInstallBtn = document.getElementById('splash-install-btn');
+  if (splashInstallBtn) {
+    splashInstallBtn.style.display = 'inline-flex';
+    splashInstallBtn.removeAttribute('disabled');
+    splashInstallBtn.title = '';
   }
 });
 
@@ -38,17 +47,79 @@ window.addEventListener('beforeinstallprompt', (e) => {
  */
 async function handleInstallPrompt() {
   const installButton = document.getElementById('install-app-button');
-  if (!deferredInstallPrompt || !installButton) {
+  const splashInstallBtn = document.getElementById('splash-install-btn');
+  if (!deferredInstallPrompt) {
+    // No prompt available
     return;
   }
-  // Show the install prompt
   deferredInstallPrompt.prompt();
-  // Wait for the user to respond to the prompt
   await deferredInstallPrompt.userChoice;
-  // We've used the prompt, and can't use it again, but we can listen for another event.
   deferredInstallPrompt = null;
-  // Hide the install button
-  installButton.style.display = 'none';
+  if (installButton) installButton.style.display = 'none';
+  if (splashInstallBtn) splashInstallBtn.style.display = 'none';
+}
+
+function renderSplashScreen() {
+  if (splashScreen) splashScreen.remove();
+  splashScreen = document.createElement('div');
+  splashScreen.id = 'splash-screen';
+  splashScreen.tabIndex = 0;
+  splashScreen.innerHTML = `
+    <div class="splash-overlay-minimal">
+      <div class="splash-content-minimal">
+        <h1 class="splash-title-minimal">PulseChainAI.com</h1>
+        <p class="splash-desc-minimal">
+          This is an AI-powered tool for learning the basics of HEX. Information may not be 100% accurate. For official documentation, visit <a href="https://hex.com" target="_blank" rel="noopener">HEX.com</a> and <a href="https://pulsechain.com" target="_blank" rel="noopener">PulseChain.com</a>.
+        </p>
+        <p class="splash-warning-minimal">
+          If you notice any inaccuracies, DM <a href="https://twitter.com/KCCRYPTO369" target="_blank" rel="noopener">@KCCRYPTO369</a> on Twitter.<br>
+          This app was made by <a href="https://superstake.win" target="_blank" rel="noopener">SuperStake.Win</a> out of love for HEX and PulseChain.
+        </p>
+        <div class="splash-scam-minimal">
+          <b>Notice:</b> If anyone claims to be part of this project and asks for donations, it is a scam. There are no official Twitter or Telegram accounts for PulseChainAI.com.
+        </div>
+        <button id="splash-continue-btn" class="splash-btn-minimal">Continue</button>
+      </div>
+    </div>
+    <style>
+      .splash-overlay-minimal {
+        position: fixed; z-index: 9999; inset: 0; background: rgba(24,24,27,0.85); display: flex; align-items: center; justify-content: center;
+      }
+      .splash-content-minimal {
+        background: #23232a; border-radius: 1rem; box-shadow: 0 4px 24px 0 rgba(0,0,0,0.18);
+        padding: 2.2rem 2rem; max-width: 400px; width: 100%; color: #e5e7eb; text-align: center; font-family: 'Inter', 'Poppins', sans-serif;
+      }
+      .splash-title-minimal {
+        font-size: 2rem; font-weight: 700; margin-bottom: 1.1rem; color: #a855f7;
+      }
+      .splash-desc-minimal {
+        font-size: 1.05rem; margin-bottom: 1.1rem; color: #e5e7eb;
+      }
+      .splash-warning-minimal {
+        font-size: 0.98rem; color: #bdbdbd; margin-bottom: 1.1rem;
+      }
+      .splash-scam-minimal {
+        background: #23232a; color: #f87171; border: 1px solid #a855f7; border-radius: 0.5rem; padding: 0.7rem; margin-bottom: 1.2rem; font-size: 0.97rem;
+      }
+      .splash-btn-minimal {
+        background: #a855f7; color: #fff; font-size: 1.08rem; font-weight: 600; border: none; border-radius: 0.4rem; padding: 0.7rem 1.6rem; cursor: pointer; transition: background 0.18s;
+      }
+      .splash-btn-minimal:hover, .splash-btn-minimal:focus {
+        background: #7c3aed;
+      }
+      a { color: #a855f7; text-decoration: underline; }
+      @media (max-width: 600px) {
+        .splash-content-minimal { padding: 1.1rem 0.5rem; max-width: 75vw; }
+        .splash-title-minimal { font-size: 1rem; }
+      }
+    </style>
+  `;
+  document.body.appendChild(splashScreen);
+  splashScreen.focus();
+  document.getElementById('splash-continue-btn')?.addEventListener('click', () => {
+    splashScreen?.remove();
+    showSplash = false;
+  });
 }
 
 // --- CORE FUNCTIONS ---
@@ -153,23 +224,122 @@ function setLoading(state: boolean) {
  * Builds the application's UI.
  */
 function buildUI() {
+  // Set full background image on body (no fallback black background)
+  document.body.style.background = "url('https://imgur.com/0MPD1rb.jpg') center center / cover no-repeat fixed";
+  document.body.style.minHeight = '100vh';
+  document.body.style.width = '100vw';
+  document.body.style.overflowX = 'hidden';
+
   app.innerHTML = `
-    <header>
-      <h1>PulseChainAI.COM</h1>
-      <button id="install-app-button" style="display: none;">
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="install-icon"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-        <span>Install</span>
-      </button>
+    <header style="background: none; display: flex; flex-direction: column; align-items: center;">
+      <h1 class="animated-gradient-title">PulseChainAI.com</h1>
+      <div class="header-subtitle">by <a href="https://superstake.win" target="_blank" rel="noopener" class="superstake-link">SuperStake.Win</a></div>
     </header>
     <div id="chat-log"></div>
-    <form id="chat-form">
-      <div class="form-controls">
-        <div class="input-wrapper">
-          <textarea id="chat-input" placeholder="Ask about HEX..." rows="1"></textarea>
+    <form id="chat-form" style="background: transparent;">
+      <div class="form-controls chat-controls-responsive" style="background: transparent;">
+        <div class="input-wrapper" style="background: transparent;">
+          <textarea id="chat-input" rows="1"></textarea>
         </div>
         <button id="send-button" type="submit">Send</button>
       </div>
     </form>
+    <style>
+      .animated-gradient-title {
+        font-size: 2.7rem;
+        font-weight: 700;
+        background: linear-gradient(270deg, #ff5ecd, #7c3aed, #ff5ecd);
+        background-size: 200% auto;
+        background-clip: text;
+        -webkit-background-clip: text;
+        color: transparent;
+        -webkit-text-fill-color: transparent;
+        animation: gradientMove 4s linear infinite;
+        margin-bottom: 0.2rem;
+        line-height: 1.1;
+      }
+      @keyframes gradientMove {
+        0% { background-position: 0% center; }
+        100% { background-position: 200% center; }
+      }
+      .header-subtitle {
+        font-size: 0.98rem;
+        color: #bdbdbd;
+        margin-top: -0.5rem;
+        margin-bottom: 0.5rem;
+        font-weight: 400;
+        display: block;
+      }
+      .superstake-link {
+        font-weight: 700;
+        color: #fff !important;
+        text-decoration: none !important;
+      }
+      .form-controls, .chat-controls-responsive, .input-wrapper, form {
+        background: transparent !important;
+        border-top: none !important;
+      }
+      .chat-controls-responsive {
+        margin-top: 32px;
+        display: flex;
+        flex-direction: row;
+        align-items: flex-end;
+        justify-content: center;
+        max-width: 480px;
+        margin-left: auto;
+        margin-right: auto;
+        gap: 8px;
+        padding-bottom: 56px;
+      }
+      .chat-controls-responsive .input-wrapper {
+        flex: 1 1 0%;
+      }
+      #chat-input {
+        width: 100%;
+        min-width: 0;
+        max-width: 100%;
+        box-sizing: border-box;
+        font-size: 1rem;
+        border-radius: 0.5rem;
+        border: 1.5px solid;
+        border-image: linear-gradient(90deg, #ff5ecd, #7c3aed) 1;
+        padding: 0.7rem 1rem;
+        background: #18181b;
+        color: #fff;
+        resize: none;
+      }
+      #send-button {
+        font-size: 1rem;
+        padding: 0.7rem 1.2rem;
+        border-radius: 0.5rem;
+        border: none;
+        background: linear-gradient(90deg, #ff5ecd, #7c3aed);
+        color: #fff;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.18s;
+      }
+      #send-button:hover, #send-button:focus {
+        background: linear-gradient(90deg, #7c3aed, #ff5ecd);
+      }
+      @media (max-width: 600px) {
+        .animated-gradient-title { font-size: 1.7rem; }
+        .chat-controls-responsive {
+          max-width: 98vw;
+          margin-top: 16px;
+          gap: 4px;
+          padding-bottom: 72px;
+        }
+        #chat-input {
+          font-size: 0.98rem;
+          padding: 0.6rem 0.7rem;
+        }
+        #send-button {
+          font-size: 0.98rem;
+          padding: 0.6rem 0.8rem;
+        }
+      }
+    </style>
   `;
 
   // Assign DOM elements to variables
@@ -193,7 +363,10 @@ function buildUI() {
     chatInput.style.height = `${chatInput.scrollHeight}px`;
   });
 
-  document.getElementById('install-app-button')!.addEventListener('click', handleInstallPrompt);
+  // Show splash on first load
+  if (showSplash) {
+    renderSplashScreen();
+  }
 }
 
 /**
