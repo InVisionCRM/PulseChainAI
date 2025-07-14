@@ -309,6 +309,8 @@ function buildUI() {
       .form-controls, .chat-controls-responsive, .input-wrapper, form {
         background: transparent !important;
         border-top: none !important;
+        border: none !important;
+        box-shadow: none !important;
       }
       .chat-controls-responsive {
         margin-top: 32px;
@@ -322,8 +324,16 @@ function buildUI() {
         gap: 8px;
         padding-bottom: calc(96px + env(safe-area-inset-bottom, 0px));
       }
-      .chat-controls-responsive .input-wrapper {
+      .input-wrapper {
         flex: 1 1 0%;
+        border-radius: 0.7rem;
+        border: 2.5px solid;
+        border-image: linear-gradient(90deg, #ff5ecd, #7c3aed) 1;
+        background: transparent !important;
+        box-shadow: none !important;
+        padding: 0;
+        display: flex;
+        align-items: stretch;
       }
       #chat-input {
         width: 100%;
@@ -331,13 +341,14 @@ function buildUI() {
         max-width: 100%;
         box-sizing: border-box;
         font-size: 16px;
-        border-radius: 0.5rem;
-        border: 1.5px solid;
-        border-image: linear-gradient(90deg, #ff5ecd, #7c3aed) 1;
+        border-radius: 0.7rem;
+        border: none;
+        outline: none;
         padding: 0.7rem 1rem;
         background: #18181b;
         color: #fff;
         resize: none;
+        box-shadow: none;
       }
       #send-button {
         font-size: 1rem;
