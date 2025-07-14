@@ -226,7 +226,7 @@ function setLoading(state: boolean) {
 function buildUI() {
   // Set full background image on body (no fallback black background)
   document.body.style.background = "url('https://imgur.com/0MPD1rb.jpg') center center / cover no-repeat fixed";
-  document.body.style.minHeight = '100vh';
+  document.body.style.minHeight = '100dvh';
   document.body.style.width = '100vw';
   document.body.style.overflowX = 'hidden';
 
@@ -289,7 +289,7 @@ function buildUI() {
         margin-left: auto;
         margin-right: auto;
         gap: 8px;
-        padding-bottom: 96px;
+        padding-bottom: calc(96px + env(safe-area-inset-bottom, 0px));
       }
       .chat-controls-responsive .input-wrapper {
         flex: 1 1 0%;
@@ -328,7 +328,7 @@ function buildUI() {
           max-width: 98vw;
           margin-top: 16px;
           gap: 4px;
-          padding-bottom: 120px;
+          padding-bottom: calc(120px + env(safe-area-inset-bottom, 0px));
         }
         #chat-input {
           font-size: 16px;
