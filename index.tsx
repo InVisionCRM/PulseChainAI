@@ -18,7 +18,7 @@ let isFirstMessage = true;
 let deferredInstallPrompt: any = null;
 
 // API Configuration
-const API_BASE_URL = 'http://localhost:3001';
+const API_BASE_URL = '/api';
 
 // Listen for PWA installation prompt
 window.addEventListener('beforeinstallprompt', (e) => {
@@ -107,7 +107,7 @@ async function handleSendMessage(e: Event) {
   const aiMessageEl = await renderMessage('ai', '<span class="loading-indicator">●</span>');
 
   try {
-    const response = await fetch(`${API_BASE_URL}/api/chat`, {
+    const response = await fetch(`${API_BASE_URL}/chat`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -122,27 +122,9 @@ async function handleSendMessage(e: Event) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
-    const reader = response.body?.getReader();
-    if (!reader) {
-      throw new Error('No response body reader available');
-    }
-
-    let streamedText = '';
-    const decoder = new TextDecoder();
-
-    while (true) {
-      const { done, value } = await reader.read();
-      
-      if (done) break;
-      
-      const chunk = decoder.decode(value, { stream: true });
-      streamedText += chunk;
-      
-      aiMessageEl.innerHTML = streamedText + ' <span class="loading-indicator">●</span>';
-      chatLog.scrollTop = chatLog.scrollHeight;
-    }
-    
-    aiMessageEl.innerHTML = streamedText;
+    // Vercel serverless function returns JSON, not a stream
+    const data = await response.json();
+    aiMessageEl.innerHTML = data.text;
     isFirstMessage = false;
 
   } catch (error) {
