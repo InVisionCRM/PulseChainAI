@@ -299,7 +299,7 @@ function buildUI() {
         min-width: 0;
         max-width: 100%;
         box-sizing: border-box;
-        font-size: 1rem;
+        font-size: 16px;
         border-radius: 0.5rem;
         border: 1.5px solid;
         border-image: linear-gradient(90deg, #ff5ecd, #7c3aed) 1;
@@ -331,7 +331,7 @@ function buildUI() {
           padding-bottom: 72px;
         }
         #chat-input {
-          font-size: 0.98rem;
+          font-size: 16px;
           padding: 0.6rem 0.7rem;
         }
         #send-button {
