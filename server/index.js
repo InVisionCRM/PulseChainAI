@@ -208,7 +208,54 @@ app.post('/api/chat', async (req, res) => {
     // Prepare the full prompt with context
     let fullPrompt = message;
     if (isFirstMessage) {
-      fullPrompt = `Based on the following documents and current information from the web, please answer my question.\n\n--- HEX TECHNICAL DOCUMENT ---\n${HEX_WHITEPAPER}\n\n--- HEX FINANCIAL AUDIT ---\n${HEX_FINANCIAL_AUDIT}\n\n--- MY QUESTION ---\n${message}`;
+      fullPrompt = `Based on the following documents and current information from the web, please answer my question.
+
+IMPORTANT: Format your response with clear sections using bold titles like this:
+**Overview**
+Brief summary here.
+
+**Current Status** 
+Latest information from web search.
+
+**Key Points**
+• Point 1
+• Point 2
+• Point 3
+
+**How It Works**
+Detailed explanation.
+
+**Next Steps**
+Actionable information.
+
+--- HEX TECHNICAL DOCUMENT ---
+${HEX_WHITEPAPER}
+
+--- HEX FINANCIAL AUDIT ---
+${HEX_FINANCIAL_AUDIT}
+
+--- MY QUESTION ---
+${message}`;
+    } else {
+      fullPrompt = `IMPORTANT: Format your response with clear sections using bold titles like this:
+**Overview**
+Brief summary here.
+
+**Current Status** 
+Latest information from web search.
+
+**Key Points**
+• Point 1
+• Point 2
+• Point 3
+
+**How It Works**
+Detailed explanation.
+
+**Next Steps**
+Actionable information.
+
+Question: ${message}`;
     }
 
     // Use generateContent with Google Search grounding as per documentation
