@@ -231,7 +231,7 @@ function buildUI() {
   document.body.style.overflowX = 'hidden';
 
   app.innerHTML = `
-    <header style="background: none; display: flex; flex-direction: column; align-items: center;">
+    <header class="glass-header">
       <h1 class="animated-gradient-title">PulseChainAI.com</h1>
       <div class="header-subtitle">by <a href="https://superstake.win" target="_blank" rel="noopener" class="superstake-link">SuperStake.Win</a></div>
     </header>
@@ -245,6 +245,22 @@ function buildUI() {
       </div>
     </form>
     <style>
+      .glass-header {
+        background: rgba(255,255,255,0.18);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        border-radius: 0 0 1.2rem 1.2rem;
+        box-shadow: 0 2px 16px 0 rgba(0,0,0,0.08);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 1.1rem 0 0.7rem 0;
+        margin-bottom: 0.5rem;
+        width: 100%;
+        position: sticky;
+        top: 0;
+        z-index: 10;
+      }
       .animated-gradient-title {
         font-size: 2.7rem;
         font-weight: 700;
