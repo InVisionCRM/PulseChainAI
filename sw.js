@@ -7,7 +7,6 @@ const URLS_TO_CACHE = [
   'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Jost:wght@700&family=Poppins:wght@400;500&display=swap',
   'https://i.imgur.com/3gXhe18.png', // Logo
   'https://imgur.com/oDyZNFQ.jpg',   // App background
-  'https://imgur.com/0MPD1rb.jpg',   // Header background
   'https://i.imgur.com/YjBbtpx.png'  // AI Avatar
 ];
 
