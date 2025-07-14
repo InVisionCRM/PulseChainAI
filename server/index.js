@@ -164,37 +164,29 @@ app.post('/api/chat', async (req, res) => {
       return res.status(400).json({ error: 'Message is required and must be a string' });
     }
 
-    // Create chat session
-    const chat = ai.chats.create({
-      model: 'gemini-2.5-flash',
+    // Prepare the full prompt with context
+    let fullPrompt = message;
+    if (isFirstMessage) {
+      fullPrompt = `Based on the following documents and current information from the web, please answer my question.\n\n--- HEX TECHNICAL DOCUMENT ---\n${HEX_WHITEPAPER}\n\n--- HEX FINANCIAL AUDIT ---\n${HEX_FINANCIAL_AUDIT}\n\n--- MY QUESTION ---\n${message}`;
+    }
+
+    // Use generateContent with Google Search grounding as per documentation
+    const response = await ai.models.generateContent({
+      model: "gemini-2.5-flash",
+      contents: fullPrompt,
       config: {
         systemInstruction: SYSTEM_INSTRUCTION,
         tools: [{ googleSearch: {} }]
       },
     });
 
-    const contentParts = [];
-
-    if (isFirstMessage) {
-      contentParts.push({ 
-        text: `Based on the following documents, please answer my question.\n\n--- HEX TECHNICAL DOCUMENT ---\n${HEX_WHITEPAPER}\n\n--- HEX FINANCIAL AUDIT ---\n${HEX_FINANCIAL_AUDIT}\n\n--- MY QUESTION ---` 
-      });
-    }
-    
-    contentParts.push({ text: message });
-
     // Set headers for streaming
     res.setHeader('Content-Type', 'text/plain; charset=utf-8');
     res.setHeader('Cache-Control', 'no-cache');
     res.setHeader('Connection', 'keep-alive');
 
-    // Send message and stream response
-    const stream = await chat.sendMessageStream({ message: contentParts });
-
-    for await (const chunk of stream) {
-      res.write(chunk.text);
-    }
-
+    // Send the response
+    res.write(response.text);
     res.end();
 
   } catch (error) {

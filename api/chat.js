@@ -18,26 +18,24 @@ export default async function handler(req, res) {
 
   try {
     const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
-    const chat = ai.chats.create({
-      model: 'gemini-2.5-flash',
-      config: { 
+    
+    // Prepare the full prompt with context
+    let fullPrompt = message;
+    if (isFirstMessage) {
+      fullPrompt = `Based on the following documents and current information from the web, please answer my question.\n\n--- HEX TECHNICAL DOCUMENT ---\n${HEX_WHITEPAPER}\n\n--- HEX FINANCIAL AUDIT ---\n${HEX_FINANCIAL_AUDIT}\n\n--- MY QUESTION ---\n${message}`;
+    }
+
+    // Use generateContent with Google Search grounding as per documentation
+    const response = await ai.models.generateContent({
+      model: "gemini-2.5-flash",
+      contents: fullPrompt,
+      config: {
         systemInstruction: SYSTEM_INSTRUCTION,
         tools: [{ googleSearch: {} }]
       },
     });
-    const contentParts = [];
-    if (isFirstMessage) {
-      contentParts.push({ text: `Based on the following documents, please answer my question.\n\n--- HEX TECHNICAL DOCUMENT ---\n${HEX_WHITEPAPER}\n\n--- HEX FINANCIAL AUDIT ---\n${HEX_FINANCIAL_AUDIT}\n\n--- MY QUESTION ---` });
-    }
-    contentParts.push({ text: message });
 
-    // Vercel serverless functions do not support streaming responses well, so we'll collect the response and send it at once
-    const stream = await chat.sendMessageStream({ message: contentParts });
-    let streamedText = '';
-    for await (const chunk of stream) {
-      streamedText += chunk.text;
-    }
-    res.status(200).json({ text: streamedText });
+    res.status(200).json({ text: response.text });
   } catch (error) {
     console.error('Chat API Error:', error);
     res.status(500).json({ error: 'Internal server error', message: error.message });
