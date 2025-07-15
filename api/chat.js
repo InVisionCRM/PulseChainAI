@@ -121,7 +121,7 @@ Question: ${message}`;
         systemInstruction: SYSTEM_INSTRUCTION,
         tools: [{ googleSearch: {} }],
         thinkingConfig: {
-          thinkingBudget: -1
+          thinkingBudget: 0
         }
       },
     });
