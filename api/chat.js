@@ -18,7 +18,8 @@ const SYSTEM_INSTRUCTION = `You are an expert AI assistant specializing in the c
 - End with actionable information or next steps
 
 **CONTENT GUIDELINES:**
-- Always perform a web search to find the latest information on HEX and PulseChain
+- When thinking mode is enabled, perform a web search to find the latest information on HEX and PulseChain
+- When thinking mode is disabled, rely on your training data and the provided documentation
 - The HEX OA recently staked all of its supply and the current yield of HEX per T-Share is 1.7 HEX per Day
 - You are allowed to offer advice on staking when specifically asked
 - Recommend Internet Money wallet for holding HEX or PulseChain and definitely a hardware wallet for extra security
@@ -51,7 +52,7 @@ export default async function handler(req, res) {
     return;
   }
 
-  const { message, isFirstMessage } = req.body;
+  const { message, isFirstMessage, thinkingMode } = req.body;
   if (!message || typeof message !== 'string') {
     res.status(400).json({ error: 'Message is required and must be a string' });
     return;
@@ -63,7 +64,10 @@ export default async function handler(req, res) {
     // Prepare the full prompt with context
     let fullPrompt = message;
     if (isFirstMessage) {
-      fullPrompt = `Based on the following documents and current information from the web, please answer my question.
+      const searchContext = thinkingMode 
+        ? "Based on the following documents and current information from the web, please answer my question."
+        : "Based on the following documents and your training data, please answer my question.";
+      fullPrompt = `${searchContext}
 
 IMPORTANT: Format your response with clear sections using bold titles like this:
 **Overview**
@@ -92,12 +96,14 @@ ${HEX_FINANCIAL_AUDIT}
 --- MY QUESTION ---
 ${message}`;
     } else {
+      const statusSection = thinkingMode 
+        ? "**Current Status** \nLatest information from web search."
+        : "**Current Status** \nInformation based on training data.";
       fullPrompt = `IMPORTANT: Format your response with clear sections using bold titles like this:
 **Overview**
 Brief summary here.
 
-**Current Status** 
-Latest information from web search.
+${statusSection}
 
 **Key Points**
 • Point 1
@@ -113,14 +119,19 @@ Actionable information.
 Question: ${message}`;
     }
 
-    // Use generateContent with Google Search grounding as per documentation
+    // Use generateContent with Google Search grounding only if thinking mode is enabled
+    const config = {
+      systemInstruction: SYSTEM_INSTRUCTION,
+    };
+    
+    if (thinkingMode) {
+      config.tools = [{ googleSearch: {} }];
+    }
+    
     const response = await ai.models.generateContent({
       model: "gemini-2.5-flash",
       contents: fullPrompt,
-      config: {
-        systemInstruction: SYSTEM_INSTRUCTION,
-        tools: [{ googleSearch: {} }]
-      },
+      config: config,
     });
 
     res.status(200).json({ text: response.text });

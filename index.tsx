@@ -23,6 +23,9 @@ let canInstall = false;
 // API Configuration
 const API_BASE_URL = '/api';
 
+// Thinking mode state
+let thinkingModeEnabled = false;
+
 // Listen for PWA installation prompt
 window.addEventListener('beforeinstallprompt', (e) => {
   e.preventDefault();
@@ -220,7 +223,8 @@ async function handleSendMessage(e: Event) {
       },
       body: JSON.stringify({
         message: userMessage,
-        isFirstMessage: isFirstMessage
+        isFirstMessage: isFirstMessage,
+        thinkingMode: thinkingModeEnabled
       }),
     });
 
@@ -267,8 +271,21 @@ function buildUI() {
 
   app.innerHTML = `
     <header class="header-blur-bg" style="background: none; display: flex; flex-direction: column; align-items: center; position: relative; overflow: hidden;">
-      <h1 class="animated-gradient-title">PulseChainAI.com</h1>
-      <div class="header-subtitle">by <a href="https://superstake.win" target="_blank" rel="noopener" class="superstake-link">SuperStake.Win</a></div>
+      <div class="header-content">
+        <div class="header-left">
+          <h1 class="animated-gradient-title">PulseChainAI.com</h1>
+          <div class="header-subtitle">by <a href="https://superstake.win" target="_blank" rel="noopener" class="superstake-link">SuperStake.Win</a></div>
+        </div>
+        <div class="header-right">
+          <div class="thinking-mode-toggle">
+            <label class="toggle-label">
+              <input type="checkbox" id="thinking-mode-checkbox">
+              <span class="toggle-slider"></span>
+              <span class="toggle-text">Thinking Mode</span>
+            </label>
+          </div>
+        </div>
+      </div>
     </header>
     <div id="chat-log"></div>
     <form id="chat-form" style="background: transparent;">
@@ -300,6 +317,27 @@ function buildUI() {
         position: relative;
         z-index: 1;
       }
+      
+      .header-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        width: 100%;
+        max-width: 1200px;
+        padding: 0 1rem;
+      }
+      
+      .header-left {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      
+      .header-right {
+        display: flex;
+        align-items: center;
+        margin-top: 0.5rem;
+      }
       .animated-gradient-title {
         font-size: 2.7rem;
         font-weight: 700;
@@ -330,6 +368,59 @@ function buildUI() {
         font-weight: 700;
         color: #fff !important;
         text-decoration: underline !important;
+      }
+      
+      .thinking-mode-toggle {
+        margin: 0;
+      }
+      
+      .toggle-label {
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        font-size: 0.9rem;
+        color: #e5e7eb;
+        gap: 0.5rem;
+      }
+      
+      .toggle-label input[type="checkbox"] {
+        display: none;
+      }
+      
+      .toggle-slider {
+        position: relative;
+        width: 3rem;
+        height: 1.5rem;
+        background: rgba(107, 114, 128, 0.5);
+        border-radius: 1rem;
+        transition: background 0.3s ease;
+        border: 2px solid rgba(255, 255, 255, 0.2);
+      }
+      
+      .toggle-slider::before {
+        content: '';
+        position: absolute;
+        top: 2px;
+        left: 2px;
+        width: 1.1rem;
+        height: 1.1rem;
+        background: #fff;
+        border-radius: 50%;
+        transition: transform 0.3s ease;
+      }
+      
+      .toggle-label input[type="checkbox"]:checked + .toggle-slider {
+        background: linear-gradient(90deg, #ff5ecd, #7c3aed);
+        border-color: rgba(255, 255, 255, 0.4);
+      }
+      
+      .toggle-label input[type="checkbox"]:checked + .toggle-slider::before {
+        transform: translateX(1.5rem);
+      }
+      
+      .toggle-text {
+        font-weight: 500;
+        user-select: none;
       }
       .form-controls, .chat-controls-responsive, .input-wrapper, form {
         background: transparent !important;
@@ -411,6 +502,36 @@ function buildUI() {
       }
       @media (max-width: 600px) {
         .animated-gradient-title { font-size: 1.7rem; }
+        .header-content {
+          flex-direction: column;
+          align-items: center;
+          gap: 1rem;
+          padding: 0 0.5rem;
+        }
+        .header-left {
+          align-items: center;
+          text-align: center;
+        }
+        .header-right {
+          margin-top: 0;
+        }
+        .thinking-mode-toggle {
+          margin: 0;
+        }
+        .toggle-label {
+          font-size: 0.8rem;
+        }
+        .toggle-slider {
+          width: 2.5rem;
+          height: 1.3rem;
+        }
+        .toggle-slider::before {
+          width: 0.9rem;
+          height: 0.9rem;
+        }
+        .toggle-label input[type="checkbox"]:checked + .toggle-slider::before {
+          transform: translateX(1.2rem);
+        }
         .chat-controls-responsive {
           max-width: 98vw;
           margin-top: 16px;
@@ -437,6 +558,12 @@ function buildUI() {
   
   // Add event listeners
   chatForm.addEventListener('submit', handleSendMessage);
+  
+  // Add thinking mode toggle event listener
+  const thinkingModeCheckbox = document.getElementById('thinking-mode-checkbox') as HTMLInputElement;
+  thinkingModeCheckbox.addEventListener('change', (e) => {
+    thinkingModeEnabled = (e.target as HTMLInputElement).checked;
+  });
   
   chatInput.addEventListener('keydown', (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
