@@ -123,7 +123,9 @@ Question: ${message}`;
     // Use generateContent with Google Search grounding only if thinking mode is enabled
     const config = {
       systemInstruction: SYSTEM_INSTRUCTION,
-      thinkingBudget: thinkingMode ? -1 : 0
+      thinkingConfig: {
+        thinkingBudget: thinkingMode ? -1 : 0
+      }
     };
     
     if (thinkingMode) {
