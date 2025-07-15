@@ -67,5 +67,11 @@
     
     <!-- App Script -->
     <script type="module" src="/index.tsx"></script>
+    
+    <!-- Vercel Analytics -->
+    <script type="module">
+      import { inject } from '@vercel/analytics';
+      inject();
+    </script>
   </body>
 </html>
