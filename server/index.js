@@ -264,7 +264,10 @@ Question: ${message}`;
       contents: fullPrompt,
       config: {
         systemInstruction: SYSTEM_INSTRUCTION,
-        tools: [{ googleSearch: {} }]
+        tools: [{ googleSearch: {} }],
+        thinkingConfig: {
+          thinkingBudget: -1
+        }
       },
     });
 
