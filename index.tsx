@@ -438,6 +438,103 @@ function buildUI() {
           padding: 0.6rem 0.8rem;
         }
       }
+
+      @media (max-width: 480px) {
+        .animated-gradient-title { 
+          font-size: 1.5rem; 
+          line-height: 1.1;
+        }
+        .header-subtitle {
+          font-size: 0.85rem;
+        }
+        .chat-controls-responsive {
+          max-width: 95vw;
+          margin-top: 12px;
+          gap: 3px;
+          padding-bottom: calc(100px + env(safe-area-inset-bottom, 0px));
+        }
+        #chat-input {
+          font-size: 16px;
+          padding: 0.5rem 0.6rem;
+          min-height: 44px;
+        }
+        #send-button {
+          font-size: 0.9rem;
+          padding: 0.5rem 0.7rem;
+          min-height: 44px;
+        }
+        .header-blur-bg {
+          padding: 0.75rem;
+        }
+      }
+
+      /* Mobile-specific fixes */
+      @media (max-width: 768px) {
+        #app {
+          overflow-x: hidden;
+        }
+        
+        .header-blur-bg {
+          overflow-x: hidden;
+        }
+        
+        #chat-log {
+          overflow-x: hidden;
+        }
+        
+        .message {
+          overflow-x: hidden;
+        }
+        
+        .message .text {
+          word-wrap: break-word;
+          overflow-wrap: break-word;
+        }
+      }
+
+      /* Prevent horizontal scroll on mobile */
+      @media (max-width: 480px) {
+        body {
+          overflow-x: hidden;
+        }
+        
+        #app {
+          width: 100vw;
+          overflow-x: hidden;
+        }
+        
+        .header-blur-bg {
+          width: 100%;
+          overflow-x: hidden;
+        }
+        
+        #chat-log {
+          width: 100%;
+          overflow-x: hidden;
+        }
+        
+        #chat-form {
+          width: 100%;
+          overflow-x: hidden;
+        }
+        
+        .chat-controls-responsive {
+          width: 100%;
+          overflow-x: hidden;
+        }
+        
+        .input-wrapper {
+          width: 100%;
+          overflow-x: hidden;
+        }
+        
+        #chat-input {
+          width: 100%;
+          box-sizing: border-box;
+          word-wrap: break-word;
+          overflow-wrap: break-word;
+        }
+      }
     </style>
   `;
 

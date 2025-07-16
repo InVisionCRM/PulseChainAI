@@ -693,6 +693,7 @@ Examples:
           flex-direction: column;
           gap: 1rem;
           text-align: center;
+          padding: 1rem;
         }
 
         .security-badges {
@@ -702,6 +703,7 @@ Examples:
 
         .solidity-main {
           padding: 1rem;
+          gap: 1rem;
         }
 
         .options-grid {
@@ -711,20 +713,215 @@ Examples:
         .input-actions {
           flex-wrap: wrap;
         }
+
+        .code-input-container,
+        .info-input-container,
+        .audit-options {
+          padding: 1rem;
+        }
+
+        #code-input {
+          min-height: 200px;
+          font-size: 0.85rem;
+        }
+
+        #contract-info {
+          min-height: 100px;
+          font-size: 0.85rem;
+        }
+
+        .help-modal-content {
+          width: 95%;
+          max-height: 90vh;
+          margin: 1rem;
+        }
+
+        .help-modal-header {
+          padding: 1rem;
+        }
+
+        .help-modal-body {
+          padding: 1rem;
+        }
       }
 
       @media (max-width: 480px) {
+        .solidity-header {
+          padding: 0.75rem;
+        }
+
         .interface-title {
+          font-size: 1.3rem;
+        }
+
+        .title-icon {
           font-size: 1.5rem;
+        }
+
+        .interface-subtitle {
+          font-size: 0.8rem;
+        }
+
+        .solidity-main {
+          padding: 0.75rem;
         }
 
         .options-grid {
           grid-template-columns: 1fr;
+          gap: 0.5rem;
         }
 
         .audit-btn {
           padding: 0.75rem 1.5rem;
           font-size: 0.9rem;
+          min-width: 180px;
+        }
+
+        .code-input-container,
+        .info-input-container,
+        .audit-options {
+          padding: 0.75rem;
+        }
+
+        .input-header {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 0.5rem;
+        }
+
+        .input-actions {
+          width: 100%;
+          justify-content: space-between;
+        }
+
+        .action-btn {
+          padding: 0.2rem 0.5rem;
+          font-size: 0.75rem;
+        }
+
+        .help-btn {
+          padding: 0.2rem 0.5rem;
+          font-size: 0.75rem;
+        }
+
+        #code-input {
+          min-height: 150px;
+          font-size: 0.8rem;
+          padding: 0.75rem;
+        }
+
+        #contract-info {
+          min-height: 80px;
+          font-size: 0.8rem;
+          padding: 0.75rem;
+        }
+
+        .help-modal-content {
+          width: 98%;
+          max-height: 95vh;
+          margin: 0.5rem;
+        }
+
+        .help-modal-header {
+          padding: 0.75rem;
+        }
+
+        .help-modal-header h3 {
+          font-size: 1rem;
+        }
+
+        .help-modal-body {
+          padding: 0.75rem;
+        }
+
+        .help-category h4 {
+          font-size: 0.9rem;
+        }
+
+        .help-category p {
+          font-size: 0.8rem;
+        }
+      }
+
+      /* Mobile-specific fixes */
+      @media (max-width: 768px) {
+        .solidity-interface {
+          min-height: 100vh;
+          overflow-x: hidden;
+        }
+
+        .solidity-main {
+          overflow-x: hidden;
+        }
+
+        .input-section {
+          overflow-x: hidden;
+        }
+
+        .code-editor {
+          overflow-x: auto;
+        }
+
+        #code-input {
+          word-wrap: break-word;
+          overflow-wrap: break-word;
+        }
+
+        .results-section {
+          overflow-x: auto;
+        }
+
+        .audit-results {
+          word-wrap: break-word;
+          overflow-wrap: break-word;
+        }
+      }
+
+      /* Prevent horizontal scroll on mobile */
+      @media (max-width: 480px) {
+        body {
+          overflow-x: hidden;
+        }
+
+        .solidity-interface {
+          width: 100vw;
+          overflow-x: hidden;
+        }
+
+        .solidity-main {
+          width: 100%;
+          overflow-x: hidden;
+        }
+
+        .input-section {
+          width: 100%;
+          overflow-x: hidden;
+        }
+
+        .code-input-container,
+        .info-input-container,
+        .audit-options {
+          width: 100%;
+          overflow-x: hidden;
+        }
+
+        .code-editor {
+          width: 100%;
+          overflow-x: auto;
+        }
+
+        #code-input {
+          width: 100%;
+          box-sizing: border-box;
+          word-wrap: break-word;
+          overflow-wrap: break-word;
+        }
+
+        #contract-info {
+          width: 100%;
+          box-sizing: border-box;
+          word-wrap: break-word;
+          overflow-wrap: break-word;
         }
       }
     </style>

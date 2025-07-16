@@ -457,6 +457,7 @@ function renderDashboard() {
         .agents-grid {
           grid-template-columns: 1fr;
           padding: 0 1rem 2rem;
+          gap: 1.5rem;
         }
 
         .dashboard-header {
@@ -468,19 +469,130 @@ function renderDashboard() {
           left: 1rem;
           padding: 0.5rem 1rem;
         }
+
+        .agent-card {
+          margin: 0;
+        }
+
+        .agent-name {
+          font-size: 1.3rem;
+        }
+
+        .agent-description {
+          font-size: 0.9rem;
+        }
+
+        .launch-btn {
+          padding: 0.6rem 1.2rem;
+          font-size: 0.85rem;
+        }
       }
 
       @media (max-width: 480px) {
+        .dashboard-container {
+          overflow-x: hidden;
+        }
+
         .main-title {
-          font-size: 2.5rem;
+          font-size: 2.2rem;
+          line-height: 1.1;
+        }
+
+        .subtitle {
+          font-size: 1rem;
+        }
+
+        .dashboard-header {
+          padding: 1.5rem 0.75rem 2rem;
+        }
+
+        .agents-grid {
+          padding: 0 0.75rem 1.5rem;
+          gap: 1rem;
         }
 
         .agent-card {
-          padding: 1.5rem;
+          padding: 1.25rem;
+          margin: 0;
         }
 
         .agent-icon {
-          font-size: 2.5rem;
+          font-size: 2.2rem;
+        }
+
+        .agent-name {
+          font-size: 1.2rem;
+          margin-bottom: 0.75rem;
+        }
+
+        .agent-description {
+          font-size: 0.85rem;
+          margin-bottom: 1.5rem;
+        }
+
+        .launch-btn {
+          padding: 0.5rem 1rem;
+          font-size: 0.8rem;
+          width: 100%;
+          justify-content: center;
+        }
+
+        .back-btn {
+          top: 0.75rem;
+          left: 0.75rem;
+          padding: 0.4rem 0.8rem;
+          font-size: 0.85rem;
+        }
+
+        .back-text {
+          display: none;
+        }
+
+        .orb {
+          display: none;
+        }
+      }
+
+      /* Mobile-specific fixes */
+      @media (max-width: 768px) {
+        .dashboard-container {
+          min-height: 100vh;
+          overflow-x: hidden;
+        }
+
+        .agents-grid {
+          overflow-x: hidden;
+        }
+
+        .agent-card {
+          overflow-x: hidden;
+        }
+      }
+
+      /* Prevent horizontal scroll on mobile */
+      @media (max-width: 480px) {
+        body {
+          overflow-x: hidden;
+        }
+
+        .dashboard-container {
+          width: 100vw;
+          overflow-x: hidden;
+        }
+
+        .dashboard-header {
+          width: 100%;
+          overflow-x: hidden;
+        }
+
+        .agents-grid {
+          width: 100%;
+          overflow-x: hidden;
+        }
+
+        .agent-card {
+          width: 100%;
+          overflow-x: hidden;
         }
       }
     </style>
