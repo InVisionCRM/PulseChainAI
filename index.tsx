@@ -6,6 +6,10 @@
 
 // import { marked } from 'marked';
 
+// Import dashboard functions
+import './dashboard.tsx';
+import './solidity-interface.tsx';
+
 // --- APP STATE AND DOM ELEMENTS ---
 const app = document.getElementById('app')!;
 let chatLog: HTMLElement;
@@ -19,6 +23,7 @@ let isFirstMessage = true;
 let deferredInstallPrompt: any = null;
 let showSplash = true;
 let canInstall = false;
+let currentAgent: string | null = null;
 
 // API Configuration
 const API_BASE_URL = '/api';
@@ -220,7 +225,8 @@ async function handleSendMessage(e: Event) {
       },
       body: JSON.stringify({
         message: userMessage,
-        isFirstMessage: isFirstMessage
+        isFirstMessage: isFirstMessage,
+        agentType: (window as any).currentAgent || 'hex'
       }),
     });
 
@@ -264,6 +270,12 @@ function buildUI() {
   document.body.style.minHeight = '100dvh';
   document.body.style.width = '100vw';
   document.body.style.overflowX = 'hidden';
+
+  // Clear any existing dashboard
+  const dashboardContainer = document.querySelector('.dashboard-container');
+  if (dashboardContainer) {
+    dashboardContainer.style.display = 'none';
+  }
 
   app.innerHTML = `
     <header class="header-blur-bg" style="background: none; display: flex; flex-direction: column; align-items: center; position: relative; overflow: hidden;">
@@ -460,9 +472,8 @@ function buildUI() {
  * Main application entry point.
  */
 async function main() {
-  buildUI();
-  await renderMessage('ai', "Hello! I am an AI assistant with knowledge about HEX and PulseChain, based on the official technical documentation. How can I help you understand the HEX smart contract today?");
-  setLoading(false);
+  // Start with the dashboard instead of the chat interface
+  renderDashboard();
 }
 
 main();
